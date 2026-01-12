@@ -1,0 +1,98 @@
+from colorama import init, Back, Style
+init() # initialize colorama
+
+def get_house_value(): # house value input
+    while True: 
+        try:
+            house_value = float(input('enter the home value: R$'))
+            if house_value < 100000:
+                print('enter value above R$100.000')
+            else:
+                return house_value
+        except ValueError:
+            print(f'{Back.RED}invalid input{Style.RESET_ALL}, please enter a valid number')
+
+def get_down_payment(house_value): # down payment input
+    while True:
+        try:
+            down_payment = float(input('enter your down payment: R$'))
+            if down_payment < house_value * 0.2:
+                print(f'{Back.RED}the down payment needs to be higher{Style.RESET_ALL} enter a valid down payment')
+            elif down_payment >= house_value:
+                print(f'{Back.RED}the down payment cant be higher than the house value{Style.RESET_ALL}, enter a valid down payment')
+            else:
+                return down_payment
+        except ValueError:
+            print(f'{Back.RED}invalid input{Style.RESET_ALL}, please enter a valid number')
+
+def get_wage(): # wage input
+    while True:
+        try:
+            wage = float(input('enter your wage: R$'))
+            if wage <= 0:
+                print('enter the valid wage')
+            else:
+                return wage
+        except ValueError:
+            print(f'{Back.RED}invalid input{Style.RESET_ALL}, please enter a valid number')
+
+def get_years_to_pay(): # years to pay input
+    while True:
+        try:
+            year = int(input('enter how many years do you want to pay: '))
+            if year > 35:
+                print('you cant buy that house, because the limit time is 35 years')
+            elif year < 5:
+                print('enter a valid number of years (at least 5 year): ')
+            else:
+                return year
+        except ValueError:
+            print(f'{Back.RED}invalid input{Style.RESET_ALL}, please enter a valid number')
+
+
+
+#start of the program:
+
+house_value = get_house_value() 
+down_payment = get_down_payment(house_value)
+total_house_value = house_value - down_payment
+print(f'Total value of the house to be paid in installments: R${total_house_value}')
+wage = get_wage()
+year = get_years_to_pay()
+
+#options of interest rates:
+print('options of interest:' f'\n{Back.GREEN} option 1: economic: {Style.RESET_ALL} whit 9% per year or 0.75% per month') 
+print(f'{Back.YELLOW} option 2: average risk: {Style.RESET_ALL} with 11% per year or 0.92% per month')
+print(f'{Back.RED} option 3: high risk: {Style.RESET_ALL} with 13% per year or 1.08% per month')
+
+def get_interest_rate_option(): # interest rate option input
+    while True:
+        try:
+            interest_rate = int(input('what is the interest per year/month that you want (just a number): '))
+            if interest_rate not in (1, 2, 3):
+                print('enter a valid option (1 - 3)')
+            else:
+                return interest_rate
+        except ValueError:
+            print(f'{Back.RED}invalid input{Style.RESET_ALL}, please enter a valid option')
+interest_rate = get_interest_rate_option()
+
+#setting the interest rate based on user choice
+if interest_rate == 1:
+    interest_rate = 0.0075 #0.0075 per month (9% per year)
+elif interest_rate == 2:
+    interest_rate = 0.0092 #0.0092 per month (11% per year)
+elif interest_rate == 3:
+    interest_rate = 0.0108 #0.0108 per month (13% per year)
+month = year * 12
+
+
+monthly_payment = total_house_value * (interest_rate * (1 + interest_rate) ** month) / ((1 + interest_rate) ** month - 1) #monthly compound interest value
+total_payment = monthly_payment * month # total payment over the loan period
+total_interest = total_payment - total_house_value # total interest paid over the loan period
+
+if monthly_payment > wage * 0.30: #checking if the monthly payment is more than 30% of the wage
+    print(f'you {Back.RED} cant buy {Style.RESET_ALL} that house in {month} months, because the installment is bigger than 30% of your wage')
+else:
+    print(f'you {Back.GREEN} can buy {Style.RESET_ALL} that home!'f'\nyou will pay R${monthly_payment:.2f} per month per {month} months') #displaying monthly payment
+    print(f'your total cost with interest is: R${total_interest:.2f}') #displaying total interest paid over the loan period
