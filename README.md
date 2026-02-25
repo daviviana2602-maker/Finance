@@ -18,4 +18,4 @@ O programa considera:
 
 Mais importante do que o resultado final foi o processo de aprendizado e organização do código.
 
-Este projeto faz parte da minha jornada de estudos em Python.
+Este projeto faz parte da minha jornada de estudos em Python
